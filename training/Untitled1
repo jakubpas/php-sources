@@ -1,0 +1,9 @@
+from ascii import lowercase
+
+def litery():
+    
+    for i in litery.len:
+     print litery[i]
+    
+
+litery()

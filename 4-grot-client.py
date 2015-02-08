@@ -7,7 +7,7 @@ import logging
 
 log = logging.getLogger('grot-client')
 
-SERVER = 'localhost'
+SERVER = 'grot-lukaszjagodzinski.c9.io'
 
 if __name__ == '__main__':
     token = sys.argv[1]  # your Access Token
@@ -16,7 +16,7 @@ if __name__ == '__main__':
     time.sleep(random.random())
 
     # connect to the game server
-    client = http.client.HTTPConnection(SERVER, 8080)
+    client = http.client.HTTPConnection(SERVER, 80)
     client.connect()
 
     # block until the game starts
@@ -63,6 +63,30 @@ if __name__ == '__main__':
 
     while response.status == 200:
         data = json.loads(response.read().decode())
+        moves = str(data['moves'])
+        score = '';
+        if('score' in data.keys()):
+            score = str(data['score'])
+        print('Moves: ' + moves + ' Score: ' + score)
+        #data['board'][0][0]['direction'];
+        #here
+        xpos_tmp = 3
+        ypos_tmp = 3
+        max_score = 0;
+        for xpos in range(2,5):
+            for ypos in range(2,5):
+                if (data['board'][ypos][xpos]['points']>max_score):
+                    ypos_tmp = ypos
+                    xpos_tmp = xpos
+                    #print(str(ypos_tmp) + ' ' + str(xpos_tmp))
+                    # print(max_score)
+                    max_score = data['board'][ypos][xpos]['points']
+        
+        xpos = ypos_tmp            
+        xpos = xpos_tmp            
+        print(str(ypos) + ' ' + str(xpos))
+        #xpos = random.randint(0, 4)
+        #ypos = random.randint(0, 4)
 
         time.sleep(random.random() * 3 + 1)
 
@@ -70,8 +94,8 @@ if __name__ == '__main__':
         client.request(
             'POST', '/games/{}/board?token={}'.format(game, token),
             json.dumps({
-                'x': random.randint(0, 4),
-                'y': random.randint(0, 4),
+                'x': xpos,
+                'y': ypos,
             })
         )
 
